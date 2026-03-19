@@ -36,10 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   hooks_riverpod: ^3.3.1
   flutter_hooks:
+  freezed_annotation: ^3.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  freezed: ^3.2.3
+  build_runner: ^2.13.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
