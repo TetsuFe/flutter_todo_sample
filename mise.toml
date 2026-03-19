@@ -1,0 +1,4 @@
+[tools]
+ruby = "3.4"
+"gem:cocoapods" = "1.16.2"
+flutter = "3.38.10-stable"
