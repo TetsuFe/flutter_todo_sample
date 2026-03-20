@@ -14,12 +14,8 @@ final taskRepositoryProvider = TaskRepositoryProvider._();
 
 final class TaskRepositoryProvider
     extends
-        $FunctionalProvider<
-          InMemoryTaskRepository,
-          InMemoryTaskRepository,
-          InMemoryTaskRepository
-        >
-    with $Provider<InMemoryTaskRepository> {
+        $FunctionalProvider<ITaskRepository, ITaskRepository, ITaskRepository>
+    with $Provider<ITaskRepository> {
   TaskRepositoryProvider._()
     : super(
         from: null,
@@ -36,22 +32,21 @@ final class TaskRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<InMemoryTaskRepository> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<ITaskRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  InMemoryTaskRepository create(Ref ref) {
+  ITaskRepository create(Ref ref) {
     return taskRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(InMemoryTaskRepository value) {
+  Override overrideWithValue(ITaskRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<InMemoryTaskRepository>(value),
+      providerOverride: $SyncValueProvider<ITaskRepository>(value),
     );
   }
 }
 
-String _$taskRepositoryHash() => r'b1ad73a4b5992f9236cdf9bb125597bfb88226e5';
+String _$taskRepositoryHash() => r'e10f1b230f9075fd7b2de4f8203d375fe336cca7';
