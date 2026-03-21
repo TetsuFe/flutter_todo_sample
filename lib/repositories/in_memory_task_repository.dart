@@ -22,8 +22,14 @@ class InMemoryTaskRepository extends ITaskRepository {
   }
 
   @override
-  List<Task> fetchTasks({int cursorId = 1, int perPage = 20}) {
-    return _tasks.where((task) => task.id >= cursorId).take(perPage).toList();
+  (List<Task>, bool) fetchTasks({int page = 1, int perPage = 20}) {
+    final offset = (page - 1) * perPage + 1;
+    final tasks = _tasks
+        .where((task) => task.id >= offset)
+        .take(perPage)
+        .toList();
+    final hasNextPage = _tasks.length > offset + perPage - 1;
+    return (tasks, hasNextPage);
   }
 
   static void reset() {

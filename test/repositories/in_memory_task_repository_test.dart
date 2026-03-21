@@ -41,8 +41,8 @@ void main() {
         repository.createTask('Task $i');
       }
 
-      final firstPageTasks = repository.fetchTasks(cursorId: 1, perPage: 20);
-      final secondPageTasks = repository.fetchTasks(cursorId: 21, perPage: 20);
+      final (firstPageTasks, _) = repository.fetchTasks(page: 1, perPage: 20);
+      final (secondPageTasks, _) = repository.fetchTasks(page: 2, perPage: 20);
 
       expect(firstPageTasks.length, 20);
       expect(secondPageTasks.length, 10);

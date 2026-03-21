@@ -45,4 +45,23 @@ class MockITaskRepository extends _i1.Mock implements _i3.ITaskRepository {
             ),
           )
           as _i2.Task);
+
+  @override
+  List<_i2.Task> createTasks(List<String>? titles) =>
+      (super.noSuchMethod(
+            Invocation.method(#createTasks, [titles]),
+            returnValue: <_i2.Task>[],
+          )
+          as List<_i2.Task>);
+
+  @override
+  (List<_i2.Task>, bool) fetchTasks({int? page, int? perPage}) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchTasks, [], {
+              #page: page,
+              #perPage: perPage,
+            }),
+            returnValue: (<_i2.Task>[], false),
+          )
+          as (List<_i2.Task>, bool));
 }

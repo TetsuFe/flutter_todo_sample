@@ -9,51 +9,52 @@ part of 'providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(TaskRepository)
-final taskRepositoryProvider = TaskRepositoryProvider._();
+@ProviderFor(TaskList)
+final taskListProvider = TaskListProvider._();
 
-final class TaskRepositoryProvider
-    extends $NotifierProvider<TaskRepository, ITaskRepository> {
-  TaskRepositoryProvider._()
+final class TaskListProvider
+    extends $NotifierProvider<TaskList, PagenatedTaskListState> {
+  TaskListProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'taskRepositoryProvider',
-        isAutoDispose: false,
+        name: r'taskListProvider',
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$taskRepositoryHash();
+  String debugGetCreateSourceHash() => _$taskListHash();
 
   @$internal
   @override
-  TaskRepository create() => TaskRepository();
+  TaskList create() => TaskList();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ITaskRepository value) {
+  Override overrideWithValue(PagenatedTaskListState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ITaskRepository>(value),
+      providerOverride: $SyncValueProvider<PagenatedTaskListState>(value),
     );
   }
 }
 
-String _$taskRepositoryHash() => r'9b2886af7a7a7cbda0bdc7c7f80ef77cd7bcdc98';
+String _$taskListHash() => r'c47c6c9eab3b24deb963364bb7b446eb9d1f3359';
 
-abstract class _$TaskRepository extends $Notifier<ITaskRepository> {
-  ITaskRepository build();
+abstract class _$TaskList extends $Notifier<PagenatedTaskListState> {
+  PagenatedTaskListState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ITaskRepository, ITaskRepository>;
+    final ref =
+        this.ref as $Ref<PagenatedTaskListState, PagenatedTaskListState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ITaskRepository, ITaskRepository>,
-              ITaskRepository,
+              AnyNotifier<PagenatedTaskListState, PagenatedTaskListState>,
+              PagenatedTaskListState,
               Object?,
               Object?
             >;
