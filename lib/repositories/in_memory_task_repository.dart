@@ -2,8 +2,8 @@ import 'package:flutter_todo_sample/models/task.dart';
 import 'package:flutter_todo_sample/repositories/i_task_repository.dart';
 
 class InMemoryTaskRepository extends ITaskRepository {
-  final List<Task> _tasks = [];
-
+  static int lastTaskId = 0;
+  static final List<Task> _tasks = [];
   List<Task> get tasks => List.unmodifiable(_tasks);
 
   @override
