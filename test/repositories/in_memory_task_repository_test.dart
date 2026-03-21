@@ -12,4 +12,10 @@ void main() {
     expect(repository.tasks[0].id, 1);
     expect(repository.tasks[1].id, 2);
   });
+
+  test('空のタイトルでタスクを作成しようとすると、ArgumentErrorがスローされる', () {
+    final repository = InMemoryTaskRepository();
+
+    expect(() => repository.createTask(''), throwsArgumentError);
+  });
 }
