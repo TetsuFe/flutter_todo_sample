@@ -34,5 +34,22 @@ void main() {
       expect(tasks[2].title, 'Task 3');
       expect(repository.tasks.length, 3);
     });
+
+    test('開始IDと最大取得件数を指定して、idの昇順に並んだタスクを一覧取得できる', () {
+      final repository = InMemoryTaskRepository();
+      for (int i = 1; i <= 30; i++) {
+        repository.createTask('Task $i');
+      }
+
+      final firstPageTasks = repository.fetchTasks(cursorId: 1, perPage: 20);
+      final secondPageTasks = repository.fetchTasks(cursorId: 21, perPage: 20);
+
+      expect(firstPageTasks.length, 20);
+      expect(secondPageTasks.length, 10);
+      expect(firstPageTasks.first.id, 1);
+      expect(firstPageTasks.last.id, 20);
+      expect(secondPageTasks.first.id, 21);
+      expect(secondPageTasks.last.id, 30);
+    });
   });
 }

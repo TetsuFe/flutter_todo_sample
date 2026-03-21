@@ -21,6 +21,11 @@ class InMemoryTaskRepository extends ITaskRepository {
     return titles.map((title) => createTask(title)).toList();
   }
 
+  @override
+  List<Task> fetchTasks({int cursorId = 1, int perPage = 20}) {
+    return _tasks.where((task) => task.id >= cursorId).take(perPage).toList();
+  }
+
   static void reset() {
     lastTaskId = 0;
     _tasks.clear();
