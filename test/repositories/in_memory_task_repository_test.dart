@@ -1,5 +1,5 @@
 import 'package:flutter_todo_sample/repositories/in_memory_task_repository.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('タスクを2つ作成した時、IDが1から始まる連番で割り当てられる', () {
