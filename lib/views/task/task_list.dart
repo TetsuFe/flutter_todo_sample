@@ -18,7 +18,10 @@ class TaskList extends ConsumerWidget {
         if (index > tasks.length - 1) {
           return null;
         }
-        return ListTile(title: Text(tasks[index].title));
+        return ListTile(
+          title: Text(tasks[index].title),
+          key: ValueKey(tasks[index].id),
+        );
       },
     );
   }
