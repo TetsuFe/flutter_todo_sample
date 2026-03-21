@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_todo_sample/models/task.dart';
 import 'package:flutter_todo_sample/repositories/i_task_repository.dart';
 import 'package:flutter_todo_sample/repositories/providers.dart';
 import 'package:flutter_todo_sample/views/create_task_modal.dart';
@@ -15,7 +16,9 @@ void main() {
     WidgetTester tester,
   ) async {
     final mockTaskRepository = MockITaskRepository();
-    when(mockTaskRepository.createTask(any)).thenReturn(null);
+    when(
+      mockTaskRepository.createTask(any),
+    ).thenReturn(Task(id: 1, title: '新しいタスク', isCompleted: false));
 
     await tester.pumpWidget(
       ProviderScope(

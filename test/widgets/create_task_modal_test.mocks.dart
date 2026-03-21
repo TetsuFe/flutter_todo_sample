@@ -3,8 +3,8 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter_todo_sample/models/task.dart' as _i3;
-import 'package:flutter_todo_sample/repositories/i_task_repository.dart' as _i2;
+import 'package:flutter_todo_sample/models/task.dart' as _i2;
+import 'package:flutter_todo_sample/repositories/i_task_repository.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -22,16 +22,27 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
+class _FakeTask_0 extends _i1.SmartFake implements _i2.Task {
+  _FakeTask_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [ITaskRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockITaskRepository extends _i1.Mock implements _i2.ITaskRepository {
+class MockITaskRepository extends _i1.Mock implements _i3.ITaskRepository {
   MockITaskRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Task? createTask(String? title) =>
-      (super.noSuchMethod(Invocation.method(#createTask, [title]))
-          as _i3.Task?);
+  _i2.Task createTask(String? title) =>
+      (super.noSuchMethod(
+            Invocation.method(#createTask, [title]),
+            returnValue: _FakeTask_0(
+              this,
+              Invocation.method(#createTask, [title]),
+            ),
+          )
+          as _i2.Task);
 }
