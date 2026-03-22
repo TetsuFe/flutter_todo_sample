@@ -1,5 +1,5 @@
 import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
-import 'package:flutter_todo_sample/repositories/providers.dart';
+import 'package:flutter_todo_sample/repositories/task/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'providers.g.dart';

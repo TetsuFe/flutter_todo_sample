@@ -4,7 +4,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter_todo_sample/models/task.dart' as _i2;
-import 'package:flutter_todo_sample/repositories/i_task_repository.dart' as _i3;
+import 'package:flutter_todo_sample/repositories/task/i_task_repository.dart'
+    as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint

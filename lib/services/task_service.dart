@@ -1,5 +1,5 @@
 import 'package:flutter_todo_sample/models/task.dart';
-import 'package:flutter_todo_sample/repositories/i_task_repository.dart';
+import 'package:flutter_todo_sample/repositories/task/i_task_repository.dart';
 
 class TaskService {
   final ITaskRepository _repository;

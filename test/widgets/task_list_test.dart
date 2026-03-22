@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_todo_sample/repositories/in_memory_task_repository.dart';
-import 'package:flutter_todo_sample/repositories/providers.dart';
+import 'package:flutter_todo_sample/repositories/task/in_memory_task_repository.dart';
+import 'package:flutter_todo_sample/repositories/task/providers.dart';
 import 'package:flutter_todo_sample/views/task/task_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
