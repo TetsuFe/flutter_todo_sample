@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_sample/views/create_task_modal.dart';
+import 'package:flutter_todo_sample/views/task/create_task_modal.dart';
+import 'package:flutter_todo_sample/views/task/task_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
@@ -32,11 +33,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: Center(
-        child: Column(mainAxisAlignment: .center, children: [
-          ],
-        ),
-      ),
+      body: Center(child: TaskList()),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateTaskModal(context),
         tooltip: 'Create Task',

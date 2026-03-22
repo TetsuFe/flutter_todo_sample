@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_todo_sample/repositories/i_task_repository.dart';
-import 'package:flutter_todo_sample/repositories/providers.dart';
-import 'package:flutter_todo_sample/views/create_task_modal.dart';
+import 'package:flutter_todo_sample/models/task.dart';
+import 'package:flutter_todo_sample/repositories/task/providers.dart';
+import 'package:flutter_todo_sample/views/task/create_task_modal.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'create_task_modal_test.mocks.dart';
+import '../shared/mocks.mocks.dart';
 
-@GenerateMocks([ITaskRepository])
 void main() {
   testWidgets('新しいタスクのタイトルを入力し、追加ボタンをタップすると、タスク作成処理が実行される', (
     WidgetTester tester,
   ) async {
     final mockTaskRepository = MockITaskRepository();
-    when(mockTaskRepository.createTask(any)).thenReturn(null);
+    when(
+      mockTaskRepository.createTask(any),
+    ).thenReturn(Task(id: 1, title: '新しいタスク', isCompleted: false));
 
     await tester.pumpWidget(
       ProviderScope(
