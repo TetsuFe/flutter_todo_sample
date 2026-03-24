@@ -4,7 +4,7 @@ import 'package:flutter_todo_sample/views/task/task_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  runApp(ProviderScope(child: MyApp(), retry: (_, _) => null));
+  runApp(ProviderScope(child: const MyApp(), retry: (_, _) => null));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Todo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: MyHomePage(title: 'ホーム'),
+      home: const MyHomePage(title: 'ホーム'),
     );
   }
 }
@@ -33,7 +33,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: TaskList(),
+      body: const TaskList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateTaskModal(context),
         tooltip: 'Create Task',

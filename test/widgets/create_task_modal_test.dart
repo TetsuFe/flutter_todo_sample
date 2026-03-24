@@ -15,7 +15,7 @@ void main() {
     final mockTaskRepository = MockITaskRepository();
     when(
       mockTaskRepository.createTask(any),
-    ).thenReturn(Task(id: 1, title: '新しいタスク', isCompleted: false));
+    ).thenReturn(const Task(id: 1, title: '新しいタスク', isCompleted: false));
 
     await tester.pumpWidget(
       ProviderScope(
