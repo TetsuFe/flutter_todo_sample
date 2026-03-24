@@ -13,7 +13,7 @@ part of 'providers.dart';
 final taskListProvider = TaskListProvider._();
 
 final class TaskListProvider
-    extends $NotifierProvider<TaskList, PagenatedTaskListState> {
+    extends $NotifierProvider<TaskList, model.PagenatedTaskListState> {
   TaskListProvider._()
     : super(
         from: null,
@@ -33,28 +33,84 @@ final class TaskListProvider
   TaskList create() => TaskList();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(PagenatedTaskListState value) {
+  Override overrideWithValue(model.PagenatedTaskListState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<PagenatedTaskListState>(value),
+      providerOverride: $SyncValueProvider<model.PagenatedTaskListState>(value),
     );
   }
 }
 
-String _$taskListHash() => r'c47c6c9eab3b24deb963364bb7b446eb9d1f3359';
+String _$taskListHash() => r'27c6c87f5722261f435a4854cf82249cf1566320';
 
-abstract class _$TaskList extends $Notifier<PagenatedTaskListState> {
-  PagenatedTaskListState build();
+abstract class _$TaskList extends $Notifier<model.PagenatedTaskListState> {
+  model.PagenatedTaskListState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
-        this.ref as $Ref<PagenatedTaskListState, PagenatedTaskListState>;
+        this.ref
+            as $Ref<model.PagenatedTaskListState, model.PagenatedTaskListState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<PagenatedTaskListState, PagenatedTaskListState>,
-              PagenatedTaskListState,
+              AnyNotifier<
+                model.PagenatedTaskListState,
+                model.PagenatedTaskListState
+              >,
+              model.PagenatedTaskListState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(TaskSortOption)
+final taskSortOptionProvider = TaskSortOptionProvider._();
+
+final class TaskSortOptionProvider
+    extends $NotifierProvider<TaskSortOption, model.TaskSortOption> {
+  TaskSortOptionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'taskSortOptionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$taskSortOptionHash();
+
+  @$internal
+  @override
+  TaskSortOption create() => TaskSortOption();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(model.TaskSortOption value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<model.TaskSortOption>(value),
+    );
+  }
+}
+
+String _$taskSortOptionHash() => r'c3f1befe046252c4f2621a8c872cab4847fe78a1';
+
+abstract class _$TaskSortOption extends $Notifier<model.TaskSortOption> {
+  model.TaskSortOption build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<model.TaskSortOption, model.TaskSortOption>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<model.TaskSortOption, model.TaskSortOption>,
+              model.TaskSortOption,
               Object?,
               Object?
             >;

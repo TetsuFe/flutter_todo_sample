@@ -1,4 +1,5 @@
-import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
+import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart'
+    as model;
 import 'package:flutter_todo_sample/repositories/task/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,10 +10,14 @@ class TaskList extends _$TaskList {
   final firstPage = 1;
 
   @override
-  PagenatedTaskListState build() {
+  model.PagenatedTaskListState build() {
     final repository = ref.watch(taskRepositoryProvider);
-    final (tasks, hasNextPage) = repository.fetchTasks(page: firstPage);
-    return PagenatedTaskListState(
+    final sortOption = ref.watch(taskSortOptionProvider);
+    final (tasks, hasNextPage) = repository.fetchTasks(
+      page: firstPage,
+      sortOption: sortOption,
+    );
+    return model.PagenatedTaskListState(
       tasks: tasks,
       currentPage: firstPage,
       hasNextPage: hasNextPage,
@@ -21,12 +26,44 @@ class TaskList extends _$TaskList {
 
   void loadNextPage() {
     final repository = ref.watch(taskRepositoryProvider);
+    final sortOption = ref.watch(taskSortOptionProvider);
     final nextPage = state.currentPage + 1;
-    final (nextTasks, hasNextPage) = repository.fetchTasks(page: nextPage);
+    final (nextTasks, hasNextPage) = repository.fetchTasks(
+      page: nextPage,
+      sortOption: sortOption,
+    );
     state = state.copyWith(
       tasks: [...state.tasks, ...nextTasks],
       currentPage: nextPage,
       hasNextPage: hasNextPage,
     );
+  }
+
+  void refresh() {
+    final repository = ref.watch(taskRepositoryProvider);
+    final sortOption = ref.watch(taskSortOptionProvider);
+    final (tasks, hasNextPage) = repository.fetchTasks(
+      page: firstPage,
+      sortOption: sortOption,
+    );
+    state = model.PagenatedTaskListState(
+      tasks: tasks,
+      currentPage: firstPage,
+      hasNextPage: hasNextPage,
+    );
+  }
+}
+
+@riverpod
+class TaskSortOption extends _$TaskSortOption {
+  @override
+  model.TaskSortOption build() {
+    return model.TaskSortOption.latest;
+  }
+
+  void toggle() {
+    state = state == model.TaskSortOption.latest
+        ? model.TaskSortOption.oldest
+        : model.TaskSortOption.latest;
   }
 }

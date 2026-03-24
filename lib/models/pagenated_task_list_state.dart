@@ -11,3 +11,5 @@ abstract class PagenatedTaskListState with _$PagenatedTaskListState {
     required bool hasNextPage,
   }) = _PagenatedTaskListState;
 }
+
+enum TaskSortOption { latest, oldest }

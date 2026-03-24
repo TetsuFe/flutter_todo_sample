@@ -33,7 +33,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: Center(child: TaskList()),
+      body: TaskList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateTaskModal(context),
         tooltip: 'Create Task',
