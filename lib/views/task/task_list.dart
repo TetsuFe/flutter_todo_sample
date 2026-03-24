@@ -15,8 +15,11 @@ class TaskList extends ConsumerWidget {
 
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: Row(children: [Spacer(), TaskListSortFilterButton()]),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Row(children: [Spacer(), TaskListSortFilterButton()]),
+          ),
         ),
         SliverList.builder(
           itemBuilder: (context, index) {
@@ -26,9 +29,12 @@ class TaskList extends ConsumerWidget {
             if (index > tasks.length - 1) {
               return null;
             }
-            return ListTile(
-              title: Text(tasks[index].title),
-              key: ValueKey(tasks[index].id),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ListTile(
+                title: Text(tasks[index].title),
+                key: ValueKey(tasks[index].id),
+              ),
             );
           },
         ),
@@ -46,14 +52,23 @@ class TaskListSortFilterButton extends HookConsumerWidget {
     final sortOption = ref.watch(taskSortOptionProvider);
     final notifier = ref.watch(taskListProvider.notifier);
 
-    return ElevatedButton(
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
       onPressed: () {
         sortOptionNotifier.toggle();
         notifier.refresh();
       },
-      child: sortOption == model.TaskSortOption.latest
-          ? Text('新しい順')
-          : Text('古い順'),
+      child: Row(
+        children: [
+          const Icon(Icons.sort),
+          const SizedBox(width: 8),
+          sortOption == model.TaskSortOption.latest
+              ? const Text('新しい順')
+              : const Text('古い順'),
+        ],
+      ),
     );
   }
 }
