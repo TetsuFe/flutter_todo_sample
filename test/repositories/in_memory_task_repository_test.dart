@@ -1,3 +1,4 @@
+import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
 import 'package:flutter_todo_sample/repositories/task/in_memory_task_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -41,8 +42,16 @@ void main() {
         repository.createTask('Task $i');
       }
 
-      final (firstPageTasks, _) = repository.fetchTasks(page: 1, perPage: 20);
-      final (secondPageTasks, _) = repository.fetchTasks(page: 2, perPage: 20);
+      final (firstPageTasks, _) = repository.fetchTasks(
+        page: 1,
+        perPage: 20,
+        sortOption: TaskSortOption.oldest,
+      );
+      final (secondPageTasks, _) = repository.fetchTasks(
+        page: 2,
+        perPage: 20,
+        sortOption: TaskSortOption.oldest,
+      );
 
       expect(firstPageTasks.length, 20);
       expect(secondPageTasks.length, 10);
