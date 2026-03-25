@@ -1,3 +1,4 @@
+import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
 import 'package:flutter_todo_sample/repositories/task/in_memory_task_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,21 +36,56 @@ void main() {
       expect(repository.tasks.length, 3);
     });
 
-    test('開始IDと最大取得件数を指定して、idの昇順に並んだタスクを一覧取得できる', () {
-      final repository = InMemoryTaskRepository();
-      for (int i = 1; i <= 30; i++) {
-        repository.createTask('Task $i');
-      }
+    group('タスク一覧', () {
+      test('開始IDと最大取得件数を指定して、idの昇順に並んだタスクを一覧取得できる', () {
+        final repository = InMemoryTaskRepository();
+        for (int i = 1; i <= 30; i++) {
+          repository.createTask('Task $i');
+        }
 
-      final (firstPageTasks, _) = repository.fetchTasks(page: 1, perPage: 20);
-      final (secondPageTasks, _) = repository.fetchTasks(page: 2, perPage: 20);
+        final (firstPageTasks, _) = repository.fetchTasks(
+          page: 1,
+          perPage: 20,
+          sortOption: TaskSortOption.oldest,
+        );
+        final (secondPageTasks, _) = repository.fetchTasks(
+          page: 2,
+          perPage: 20,
+          sortOption: TaskSortOption.oldest,
+        );
 
-      expect(firstPageTasks.length, 20);
-      expect(secondPageTasks.length, 10);
-      expect(firstPageTasks.first.id, 1);
-      expect(firstPageTasks.last.id, 20);
-      expect(secondPageTasks.first.id, 21);
-      expect(secondPageTasks.last.id, 30);
+        expect(firstPageTasks.length, 20);
+        expect(secondPageTasks.length, 10);
+        expect(firstPageTasks.first.id, 1);
+        expect(firstPageTasks.last.id, 20);
+        expect(secondPageTasks.first.id, 21);
+        expect(secondPageTasks.last.id, 30);
+      });
+
+      test('開始IDと最大取得件数を指定して、idの降順に並んだタスクを一覧取得できる', () {
+        final repository = InMemoryTaskRepository();
+        for (int i = 1; i <= 30; i++) {
+          repository.createTask('Task $i');
+        }
+
+        final (firstPageTasks, _) = repository.fetchTasks(
+          page: 1,
+          perPage: 20,
+          sortOption: TaskSortOption.latest,
+        );
+        final (secondPageTasks, _) = repository.fetchTasks(
+          page: 2,
+          perPage: 20,
+          sortOption: TaskSortOption.latest,
+        );
+
+        expect(firstPageTasks.length, 20);
+        expect(secondPageTasks.length, 10);
+        expect(firstPageTasks.first.id, 30);
+        expect(firstPageTasks.last.id, 11);
+        expect(secondPageTasks.first.id, 10);
+        expect(secondPageTasks.last.id, 1);
+      });
     });
   });
 }

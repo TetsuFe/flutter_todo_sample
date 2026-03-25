@@ -3,6 +3,8 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart'
+    as _i4;
 import 'package:flutter_todo_sample/models/task.dart' as _i2;
 import 'package:flutter_todo_sample/repositories/task/i_task_repository.dart'
     as _i3;
@@ -56,11 +58,16 @@ class MockITaskRepository extends _i1.Mock implements _i3.ITaskRepository {
           as List<_i2.Task>);
 
   @override
-  (List<_i2.Task>, bool) fetchTasks({int? page, int? perPage}) =>
+  (List<_i2.Task>, bool) fetchTasks({
+    int? page,
+    int? perPage,
+    _i4.TaskSortOption? sortOption,
+  }) =>
       (super.noSuchMethod(
             Invocation.method(#fetchTasks, [], {
               #page: page,
               #perPage: perPage,
+              #sortOption: sortOption,
             }),
             returnValue: (<_i2.Task>[], false),
           )
