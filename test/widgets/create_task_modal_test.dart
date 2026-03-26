@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
 import 'package:flutter_todo_sample/models/task.dart';
 import 'package:flutter_todo_sample/repositories/task/providers.dart';
 import 'package:flutter_todo_sample/views/task/create_task_modal.dart';
@@ -13,9 +14,15 @@ void main() {
     WidgetTester tester,
   ) async {
     final mockTaskRepository = MockITaskRepository();
+    final newTask = const Task(id: 1, title: '新しいタスク', isCompleted: false);
+    when(mockTaskRepository.createTask(any)).thenReturn(newTask);
     when(
-      mockTaskRepository.createTask(any),
-    ).thenReturn(const Task(id: 1, title: '新しいタスク', isCompleted: false));
+      mockTaskRepository.fetchTasks(
+        page: 1,
+        perPage: null,
+        sortOption: TaskSortOption.latest,
+      ),
+    ).thenReturn(([newTask], false));
 
     await tester.pumpWidget(
       ProviderScope(
