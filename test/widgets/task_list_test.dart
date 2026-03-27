@@ -58,4 +58,56 @@ void main() {
       expect(find.byKey(const ValueKey(1)), findsOneWidget);
     });
   });
+
+  group('タスクの完了・未完了の切り替え', () {
+    testWidgets('タスクが未完了状態の時、チェックボックスをタップすると、タスクが完了状態になる', (
+      WidgetTester tester,
+    ) async {
+      final repository = MockITaskRepository();
+      final task = const Task(id: 1, title: 'タスク1', isCompleted: false);
+      when(
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+      ).thenReturn(([task], false));
+      when(
+        repository.completeTask(1),
+      ).thenReturn(task.copyWith(isCompleted: true));
+
+      await tester.pumpWidget(buildApp(repository));
+
+      final checkbox1 = tester.widget<Checkbox>(find.byType(Checkbox));
+      expect(checkbox1.value, false);
+
+      await tester.tap(find.byType(Checkbox));
+      await tester.pump();
+
+      final checkbox2 = tester.widget<Checkbox>(find.byType(Checkbox));
+      verify(repository.completeTask(1)).called(1);
+      expect(checkbox2.value, true);
+    });
+
+    testWidgets('タスクが完了状態の時、チェックボックスをタップすると、タスクが未完了状態になる', (
+      WidgetTester tester,
+    ) async {
+      final repository = MockITaskRepository();
+      final task = const Task(id: 1, title: 'タスク1', isCompleted: true);
+      when(
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+      ).thenReturn(([task], false));
+      when(
+        repository.uncompleteTask(1),
+      ).thenReturn(task.copyWith(isCompleted: false));
+
+      await tester.pumpWidget(buildApp(repository));
+
+      final checkbox1 = tester.widget<Checkbox>(find.byType(Checkbox));
+      expect(checkbox1.value, true);
+
+      await tester.tap(find.byType(Checkbox));
+      await tester.pump();
+
+      final checkbox2 = tester.widget<Checkbox>(find.byType(Checkbox));
+      verify(repository.uncompleteTask(1)).called(1);
+      expect(checkbox2.value, false);
+    });
+  });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart'
     as model;
+import 'package:flutter_todo_sample/views/task/components/task_list_item.dart';
 import 'package:flutter_todo_sample/views/task/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -31,8 +32,8 @@ class TaskList extends ConsumerWidget {
             }
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ListTile(
-                title: Text(tasks[index].title),
+              child: TaskListItem(
+                task: tasks[index],
                 key: ValueKey(tasks[index].id),
               ),
             );

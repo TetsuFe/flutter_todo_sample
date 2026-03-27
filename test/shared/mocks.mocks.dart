@@ -72,4 +72,26 @@ class MockITaskRepository extends _i1.Mock implements _i3.ITaskRepository {
             returnValue: (<_i2.Task>[], false),
           )
           as (List<_i2.Task>, bool));
+
+  @override
+  _i2.Task completeTask(int? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#completeTask, [id]),
+            returnValue: _FakeTask_0(
+              this,
+              Invocation.method(#completeTask, [id]),
+            ),
+          )
+          as _i2.Task);
+
+  @override
+  _i2.Task uncompleteTask(int? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#uncompleteTask, [id]),
+            returnValue: _FakeTask_0(
+              this,
+              Invocation.method(#uncompleteTask, [id]),
+            ),
+          )
+          as _i2.Task);
 }

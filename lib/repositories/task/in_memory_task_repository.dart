@@ -44,6 +44,26 @@ class InMemoryTaskRepository extends ITaskRepository {
     return (tasks, hasNextPage);
   }
 
+  @override
+  Task completeTask(int id) {
+    final targetTaskId = _tasks.indexWhere((task) => task.id == id);
+    if (_tasks[targetTaskId].isCompleted) {
+      throw Exception('タスクは既に完了しています');
+    }
+    _tasks[targetTaskId] = _tasks[targetTaskId].copyWith(isCompleted: true);
+    return _tasks[targetTaskId];
+  }
+
+  @override
+  Task uncompleteTask(int id) {
+    final targetTaskId = _tasks.indexWhere((task) => task.id == id);
+    if (!_tasks[targetTaskId].isCompleted) {
+      throw Exception('タスクは既に未完了です');
+    }
+    _tasks[targetTaskId] = _tasks[targetTaskId].copyWith(isCompleted: false);
+    return _tasks[targetTaskId];
+  }
+
   static void reset() {
     lastTaskId = 0;
     _tasks.clear();
