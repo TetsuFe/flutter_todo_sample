@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_todo_sample/models/task.dart';
 import 'package:flutter_todo_sample/repositories/task/providers.dart';
 import 'package:flutter_todo_sample/views/task/providers.dart';
@@ -11,17 +10,15 @@ class TaskListItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final checkBoxNotifier = useState(task.isCompleted);
     final taskRepository = ref.watch(taskRepositoryProvider);
     final taskListNotifier = ref.watch(taskListProvider.notifier);
 
     return ListTile(
       title: Text(task.title),
       trailing: Checkbox(
-        value: checkBoxNotifier.value,
+        value: task.isCompleted,
         onChanged: (value) {
-          checkBoxNotifier.value = value ?? false;
-          if (checkBoxNotifier.value) {
+          if (value ?? false) {
             try {
               final updatedTask = taskRepository.completeTask(task.id);
               taskListNotifier.refreshTask(updatedTask);
