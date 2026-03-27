@@ -32,7 +32,10 @@ class TaskList extends ConsumerWidget {
             }
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TaskListItem(task: tasks[index]),
+              child: TaskListItem(
+                task: tasks[index],
+                key: ValueKey(tasks[index].id),
+              ),
             );
           },
         ),

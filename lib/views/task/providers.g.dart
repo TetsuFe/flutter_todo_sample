@@ -41,7 +41,7 @@ final class TaskListProvider
   }
 }
 
-String _$taskListHash() => r'27c6c87f5722261f435a4854cf82249cf1566320';
+String _$taskListHash() => r'593c1f0bedd2ab5e8d8f64e035b5206a05d36063';
 
 abstract class _$TaskList extends $Notifier<model.PagenatedTaskListState> {
   model.PagenatedTaskListState build();

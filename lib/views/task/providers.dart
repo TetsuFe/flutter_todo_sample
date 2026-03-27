@@ -1,5 +1,6 @@
 import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart'
     as model;
+import 'package:flutter_todo_sample/models/task.dart';
 import 'package:flutter_todo_sample/repositories/task/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -50,6 +51,18 @@ class TaskList extends _$TaskList {
       tasks: tasks,
       currentPage: firstPage,
       hasNextPage: hasNextPage,
+    );
+  }
+
+  void refreshTask(Task updatedTask) {
+    state = state.copyWith(
+      tasks: state.tasks.map((task) {
+        if (task.id == updatedTask.id) {
+          return updatedTask;
+        } else {
+          return task;
+        }
+      }).toList(),
     );
   }
 }

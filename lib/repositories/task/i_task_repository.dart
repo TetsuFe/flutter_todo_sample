@@ -9,4 +9,7 @@ abstract class ITaskRepository {
     int perPage,
     TaskSortOption sortOption,
   });
+
+  Task completeTask(int id);
+  Task uncompleteTask(int id);
 }
