@@ -1,7 +1,7 @@
 import 'package:flutter_todo_sample/repositories/task/i_task_repository.dart';
 import 'package:flutter_todo_sample/services/task_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'in_memory_task_repository.dart';
+import '../../repositories/task/in_memory_task_repository.dart';
 
 part 'providers.g.dart';
 
