@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_sample/models/task.dart';
-import 'package:flutter_todo_sample/repositories/task/providers.dart';
-import 'package:flutter_todo_sample/views/task/providers.dart';
+import 'package:flutter_todo_sample/providers/task/providers.dart';
+import 'package:flutter_todo_sample/views/task/states/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TaskListItem extends HookConsumerWidget {

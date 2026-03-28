@@ -1,4 +1,4 @@
-import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
+import 'package:flutter_todo_sample/views/task/states/pagenated_task_list_state.dart';
 import 'package:flutter_todo_sample/repositories/task/in_memory_task_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 

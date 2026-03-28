@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_sample/views/task/create_task_modal.dart';
-import 'package:flutter_todo_sample/views/task/task_list.dart';
+import 'package:flutter_todo_sample/views/task/components/create_task_modal.dart';
+import 'package:flutter_todo_sample/views/task/components/task_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {

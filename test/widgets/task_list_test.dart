@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_todo_sample/models/pagenated_task_list_state.dart';
+import 'package:flutter_todo_sample/views/task/states/pagenated_task_list_state.dart';
 import 'package:flutter_todo_sample/models/task.dart';
 import 'package:flutter_todo_sample/repositories/task/i_task_repository.dart';
-import 'package:flutter_todo_sample/repositories/task/providers.dart';
-import 'package:flutter_todo_sample/views/task/task_list.dart';
+import 'package:flutter_todo_sample/providers/task/providers.dart';
+import 'package:flutter_todo_sample/views/task/components/task_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mockito/mockito.dart';
 
