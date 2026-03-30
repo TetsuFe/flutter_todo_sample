@@ -27,6 +27,7 @@ class InMemoryTaskRepository extends ITaskRepository {
     int page = 1,
     int perPage = 20,
     TaskSortOption sortOption = TaskSortOption.latest,
+    TaskFilterOption filterOption = TaskFilterOption.all,
   }) {
     final offset = (page - 1) * perPage;
     final copiedTasks = [..._tasks];

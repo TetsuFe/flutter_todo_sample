@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_todo_sample/views/task/states/pagenated_task_list_state.dart';
 import 'package:flutter_todo_sample/views/task/states/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_todo_sample/providers/task/providers.dart';
@@ -11,7 +12,9 @@ class CreateTaskModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textController = useTextEditingController();
     final taskRepository = ref.watch(taskRepositoryProvider);
-    final taskListNotifier = ref.watch(taskListProvider.notifier);
+    final taskListNotifier = ref.watch(
+      taskListProvider(TaskFilterOption.all).notifier,
+    );
 
     return AlertDialog(
       title: const Text('タスクを追加'),

@@ -10,9 +10,14 @@ class TaskList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tasks = ref.watch(taskListProvider).tasks;
-    final hasNextPage = ref.watch(taskListProvider).hasNextPage;
-    final notifier = ref.watch(taskListProvider.notifier);
+    final taskProvider = ref.watch(
+      taskListProvider(model.TaskFilterOption.all),
+    );
+    final tasks = taskProvider.tasks;
+    final hasNextPage = taskProvider.hasNextPage;
+    final notifier = ref.watch(
+      taskListProvider(model.TaskFilterOption.all).notifier,
+    );
 
     return CustomScrollView(
       slivers: [
@@ -35,6 +40,9 @@ class TaskList extends ConsumerWidget {
               child: TaskListItem(
                 task: tasks[index],
                 key: ValueKey(tasks[index].id),
+                onTaskStatusChanged: () {
+                  notifier.toggleTaskStatus(tasks[index]);
+                },
               ),
             );
           },
@@ -51,7 +59,9 @@ class TaskListSortFilterButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final sortOptionNotifier = ref.watch(taskSortOptionProvider.notifier);
     final sortOption = ref.watch(taskSortOptionProvider);
-    final notifier = ref.watch(taskListProvider.notifier);
+    final notifier = ref.watch(
+      taskListProvider(model.TaskFilterOption.all).notifier,
+    );
 
     return OutlinedButton(
       style: OutlinedButton.styleFrom(

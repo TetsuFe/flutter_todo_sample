@@ -13,3 +13,5 @@ abstract class PagenatedTaskListState with _$PagenatedTaskListState {
 }
 
 enum TaskSortOption { latest, oldest }
+
+enum TaskFilterOption { all, uncompleted, completed }

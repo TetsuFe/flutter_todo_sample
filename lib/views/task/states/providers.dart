@@ -9,14 +9,18 @@ part 'providers.g.dart';
 @riverpod
 class TaskList extends _$TaskList {
   final firstPage = 1;
+  @override
+  late final model.TaskFilterOption filterOption;
 
   @override
-  model.PagenatedTaskListState build() {
+  model.PagenatedTaskListState build(model.TaskFilterOption filterOption) {
+    this.filterOption = filterOption;
     final repository = ref.watch(taskRepositoryProvider);
     final sortOption = ref.watch(taskSortOptionProvider);
     final (tasks, hasNextPage) = repository.fetchTasks(
       page: firstPage,
       sortOption: sortOption,
+      filterOption: filterOption,
     );
     return model.PagenatedTaskListState(
       tasks: tasks,
@@ -32,6 +36,7 @@ class TaskList extends _$TaskList {
     final (nextTasks, hasNextPage) = repository.fetchTasks(
       page: nextPage,
       sortOption: sortOption,
+      filterOption: filterOption,
     );
     state = state.copyWith(
       tasks: [...state.tasks, ...nextTasks],
@@ -64,6 +69,25 @@ class TaskList extends _$TaskList {
         }
       }).toList(),
     );
+  }
+
+  void toggleTaskStatus(Task task) {
+    final repository = ref.watch(taskRepositoryProvider);
+    if (task.isCompleted) {
+      try {
+        final updatedTask = repository.uncompleteTask(task.id);
+        refreshTask(updatedTask);
+      } catch (e) {
+        // 何もしない
+      }
+    } else {
+      try {
+        final updatedTask = repository.completeTask(task.id);
+        refreshTask(updatedTask);
+      } catch (e) {
+        // 何もしない
+      }
+    }
   }
 }
 

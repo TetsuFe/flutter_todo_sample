@@ -1,38 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_sample/models/task.dart';
-import 'package:flutter_todo_sample/providers/task/providers.dart';
-import 'package:flutter_todo_sample/views/task/states/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TaskListItem extends HookConsumerWidget {
-  const TaskListItem({super.key, required this.task});
+  const TaskListItem({
+    super.key,
+    required this.task,
+    required this.onTaskStatusChanged,
+  });
   final Task task;
+  final VoidCallback onTaskStatusChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final taskRepository = ref.watch(taskRepositoryProvider);
-    final taskListNotifier = ref.watch(taskListProvider.notifier);
-
     return ListTile(
       title: Text(task.title),
       trailing: Checkbox(
         value: task.isCompleted,
-        onChanged: (value) {
-          if (value ?? false) {
-            try {
-              final updatedTask = taskRepository.completeTask(task.id);
-              taskListNotifier.refreshTask(updatedTask);
-            } catch (e) {
-              // 何もしない
-            }
-          } else {
-            try {
-              final updatedTask = taskRepository.uncompleteTask(task.id);
-              taskListNotifier.refreshTask(updatedTask);
-            } catch (e) {
-              // 何もしない
-            }
-          }
+        onChanged: (_) {
+          onTaskStatusChanged();
         },
       ),
     );
