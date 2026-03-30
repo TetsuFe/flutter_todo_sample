@@ -36,10 +36,18 @@ void main() {
           .where((task) => task.id <= 20)
           .toList();
       when(
-        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+        repository.fetchTasks(
+          page: 1,
+          sortOption: TaskSortOption.latest,
+          filterOption: TaskFilterOption.all,
+        ),
       ).thenReturn((firstPageTasks, true));
       when(
-        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
+        repository.fetchTasks(
+          page: 2,
+          sortOption: TaskSortOption.latest,
+          filterOption: TaskFilterOption.all,
+        ),
       ).thenReturn((secondPageTasks, false));
 
       await tester.pumpWidget(buildApp(repository));
@@ -66,7 +74,11 @@ void main() {
       final repository = MockITaskRepository();
       final task = const Task(id: 1, title: 'タスク1', isCompleted: false);
       when(
-        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+        repository.fetchTasks(
+          page: 1,
+          sortOption: TaskSortOption.latest,
+          filterOption: TaskFilterOption.all,
+        ),
       ).thenReturn(([task], false));
       when(
         repository.completeTask(1),
@@ -91,7 +103,11 @@ void main() {
       final repository = MockITaskRepository();
       final task = const Task(id: 1, title: 'タスク1', isCompleted: true);
       when(
-        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+        repository.fetchTasks(
+          page: 1,
+          sortOption: TaskSortOption.latest,
+          filterOption: TaskFilterOption.all,
+        ),
       ).thenReturn(([task], false));
       when(
         repository.uncompleteTask(1),
