@@ -122,6 +122,10 @@ class _TaskListTabPage extends ConsumerWidget {
     final hasNextPage = taskProvider.hasNextPage;
     final notifier = ref.watch(taskListProvider.notifier);
 
+    if (hasNextPage && filteredTask.isEmpty) {
+      Future.microtask(() => notifier.loadNextPage());
+      return const Center(child: CircularProgressIndicator());
+    }
     if (filteredTask.isEmpty) {
       switch (filterOption) {
         case model.TaskFilterOption.all:

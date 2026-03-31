@@ -145,8 +145,8 @@ void main() {
         repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
       ).thenReturn((
         [
-          const Task(id: 1, title: '未完了タスク', isCompleted: false),
           const Task(id: 2, title: '完了済みタスク', isCompleted: true),
+          const Task(id: 1, title: '未完了タスク', isCompleted: false),
         ],
         false,
       ));
@@ -175,6 +175,98 @@ void main() {
 
       expect(uncompletedTaskFinder, findsOneWidget);
       expect(completedTaskFinder, findsOneWidget);
+    });
+
+    testWidgets('完了のフィルタが有効になった時、完了のステータスのタスクが最低一つ見つかるまで、新たなページを取得する', (
+      WidgetTester tester,
+    ) async {
+      final repository = MockITaskRepository();
+
+      final completedTasks = List.generate(
+        20,
+        (index) => Task(
+          id: index + 1,
+          title: '完了済みタスク ${index + 1}',
+          isCompleted: true,
+        ),
+      ).reversed.toList();
+      final uncompletedTasks = List.generate(
+        20,
+        (index) => Task(
+          id: index + 21,
+          title: '未完了タスク ${index + 1}',
+          isCompleted: false,
+        ),
+      ).reversed.toList();
+      when(
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+      ).thenReturn((uncompletedTasks, true));
+      when(
+        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
+      ).thenReturn((completedTasks, false));
+
+      await tester.pumpWidget(buildApp(repository));
+
+      await tester.tap(find.text('完了'));
+      await tester.pump();
+
+      // 完了タブに遷移した際、最初のページ(20件)では完了タスクが見つからないため、次のページを取得する。
+      // 取得の間、ローディングインジケーターが表示される
+      verify(
+        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
+      ).called(1);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      await tester.pump();
+
+      final completedTaskFinder = find.text(completedTasks[0].title);
+      expect(completedTaskFinder, findsOneWidget);
+    });
+
+    testWidgets('完了のフィルタが有効になった時、最後のページまで取得しても完了タスクが見つからない場合、完了タスクがない旨が表示される', (
+      WidgetTester tester,
+    ) async {
+      final repository = MockITaskRepository();
+
+      final uncompletedTasks = List.generate(
+        20,
+        (index) => Task(
+          id: index + 1,
+          title: '未完了タスク ${index + 1}',
+          isCompleted: false,
+        ),
+      ).reversed.toList();
+      final uncompletedTasks2 = List.generate(
+        20,
+        (index) => Task(
+          id: index + 21,
+          title: '未完了タスク ${index + 21}',
+          isCompleted: false,
+        ),
+      ).reversed.toList();
+      when(
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+      ).thenReturn((uncompletedTasks2, true));
+      when(
+        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
+      ).thenReturn((uncompletedTasks, false));
+
+      await tester.pumpWidget(buildApp(repository));
+
+      await tester.tap(find.text('完了'));
+      await tester.pump();
+
+      // 完了タブに遷移した際、最初のページ(20件)では完了タスクが見つからないため、次のページを取得する。
+      // 取得の間、ローディングインジケーターが表示される
+      verify(
+        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
+      ).called(1);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      await tester.pump();
+
+      final emptyViewFinder = find.text('完了したタスクはありません');
+      expect(emptyViewFinder, findsOneWidget);
     });
   });
 }
