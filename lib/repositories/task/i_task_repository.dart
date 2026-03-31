@@ -8,7 +8,6 @@ abstract class ITaskRepository {
     int page,
     int perPage,
     TaskSortOption sortOption,
-    TaskFilterOption filterOption,
   });
 
   Task completeTask(int id);

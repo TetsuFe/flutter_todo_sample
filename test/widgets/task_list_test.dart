@@ -36,34 +36,32 @@ void main() {
           .where((task) => task.id <= 20)
           .toList();
       when(
-        repository.fetchTasks(
-          page: 1,
-          sortOption: TaskSortOption.latest,
-          filterOption: TaskFilterOption.all,
-        ),
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
       ).thenReturn((firstPageTasks, true));
       when(
-        repository.fetchTasks(
-          page: 2,
-          sortOption: TaskSortOption.latest,
-          filterOption: TaskFilterOption.all,
-        ),
+        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
       ).thenReturn((secondPageTasks, false));
 
       await tester.pumpWidget(buildApp(repository));
       await tester.pump();
 
       // スクロールの関係でちょうど20件目まで表示されることの確認が難しいため、1件目が表示されることのみ確認
-      expect(find.byKey(const ValueKey(30)), findsOneWidget);
+      final firstWidgetKey = ValueKey('task-list-${TaskFilterOption.all}-30');
+      expect(find.byKey(firstWidgetKey), findsOneWidget);
+
+      final list = find.byKey(ValueKey('task-list-${TaskFilterOption.all}'));
+      final scrollable = find.byWidgetPredicate((w) => w is Scrollable);
+      final scrollableOfList = find.descendant(of: list, matching: scrollable);
+      final lastWidgetKey = ValueKey('task-list-${TaskFilterOption.all}-1');
 
       // 30件目までスクロール
       await tester.scrollUntilVisible(
-        find.byKey(const ValueKey(1)),
+        find.byKey(lastWidgetKey),
         500,
-        scrollable: find.byType(Scrollable),
+        scrollable: scrollableOfList,
       );
 
-      expect(find.byKey(const ValueKey(1)), findsOneWidget);
+      expect(find.byKey(lastWidgetKey), findsOneWidget);
     });
   });
 
@@ -74,11 +72,7 @@ void main() {
       final repository = MockITaskRepository();
       final task = const Task(id: 1, title: 'タスク1', isCompleted: false);
       when(
-        repository.fetchTasks(
-          page: 1,
-          sortOption: TaskSortOption.latest,
-          filterOption: TaskFilterOption.all,
-        ),
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
       ).thenReturn(([task], false));
       when(
         repository.completeTask(1),
@@ -103,11 +97,7 @@ void main() {
       final repository = MockITaskRepository();
       final task = const Task(id: 1, title: 'タスク1', isCompleted: true);
       when(
-        repository.fetchTasks(
-          page: 1,
-          sortOption: TaskSortOption.latest,
-          filterOption: TaskFilterOption.all,
-        ),
+        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
       ).thenReturn(([task], false));
       when(
         repository.uncompleteTask(1),

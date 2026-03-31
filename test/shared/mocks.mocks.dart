@@ -62,14 +62,12 @@ class MockITaskRepository extends _i1.Mock implements _i3.ITaskRepository {
     int? page,
     int? perPage,
     _i4.TaskSortOption? sortOption,
-    _i4.TaskFilterOption? filterOption,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#fetchTasks, [], {
               #page: page,
               #perPage: perPage,
               #sortOption: sortOption,
-              #filterOption: filterOption,
             }),
             returnValue: (<_i2.Task>[], false),
           )

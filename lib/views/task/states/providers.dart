@@ -9,18 +9,14 @@ part 'providers.g.dart';
 @riverpod
 class TaskList extends _$TaskList {
   final firstPage = 1;
-  @override
-  late final model.TaskFilterOption filterOption;
 
   @override
-  model.PagenatedTaskListState build(model.TaskFilterOption filterOption) {
-    this.filterOption = filterOption;
+  model.PagenatedTaskListState build() {
     final repository = ref.watch(taskRepositoryProvider);
     final sortOption = ref.watch(taskSortOptionProvider);
     final (tasks, hasNextPage) = repository.fetchTasks(
       page: firstPage,
       sortOption: sortOption,
-      filterOption: filterOption,
     );
     return model.PagenatedTaskListState(
       tasks: tasks,
@@ -36,7 +32,6 @@ class TaskList extends _$TaskList {
     final (nextTasks, hasNextPage) = repository.fetchTasks(
       page: nextPage,
       sortOption: sortOption,
-      filterOption: filterOption,
     );
     state = state.copyWith(
       tasks: [...state.tasks, ...nextTasks],
@@ -103,4 +98,16 @@ class TaskSortOption extends _$TaskSortOption {
         ? model.TaskSortOption.oldest
         : model.TaskSortOption.latest;
   }
+}
+
+@riverpod
+List<Task> filteredTaskList(Ref ref, model.TaskFilterOption filterOption) {
+  final taskList = ref.watch(taskListProvider);
+  return switch (filterOption) {
+    model.TaskFilterOption.all => taskList.tasks,
+    model.TaskFilterOption.completed =>
+      taskList.tasks.where((task) => task.isCompleted).toList(),
+    model.TaskFilterOption.uncompleted =>
+      taskList.tasks.where((task) => !task.isCompleted).toList(),
+  };
 }
