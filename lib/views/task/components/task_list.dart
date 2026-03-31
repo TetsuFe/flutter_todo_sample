@@ -122,6 +122,18 @@ class _TaskListTabPage extends ConsumerWidget {
     final hasNextPage = taskProvider.hasNextPage;
     final notifier = ref.watch(taskListProvider.notifier);
 
+    if (filteredTask.isEmpty) {
+      switch (filterOption) {
+        case model.TaskFilterOption.all:
+          return const Center(
+            child: Text('タスクが一つも作成されていません…\n＋ボタンからタスクを作成してみましょう！'),
+          );
+        case model.TaskFilterOption.completed:
+          return const Center(child: Text('完了したタスクはありません'));
+        case model.TaskFilterOption.uncompleted:
+          return const Center(child: Text('未完了のタスクはありません'));
+      }
+    }
     return ListView.builder(
       key: PageStorageKey('task-list-$filterOption'),
       itemBuilder: (context, index) {
