@@ -52,6 +52,7 @@ class TaskList extends HookConsumerWidget {
         Expanded(
           child: PageView(
             controller: pageController,
+            onPageChanged: (value) => selectedTabIndex.value = value,
             children: const [
               TaskListBody(filterOption: model.TaskFilterOption.all),
               TaskListBody(filterOption: model.TaskFilterOption.completed),
