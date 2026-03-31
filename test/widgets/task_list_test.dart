@@ -18,104 +18,163 @@ void main() {
     );
   }
 
-  group('TaskList infinite scroll', () {
-    testWidgets('データが30件の場合、最初に最新の20件分が表示され、スクロールで残り10件が表示される', (
-      WidgetTester tester,
-    ) async {
-      final repository = MockITaskRepository();
+  group('「全て」タブのテスト', () {
+    group('TaskList infinite scroll', () {
+      testWidgets('データが30件の場合、最初に最新の20件分が表示され、スクロールで残り10件が表示される', (
+        WidgetTester tester,
+      ) async {
+        final repository = MockITaskRepository();
 
-      // idの降順のタスク30件を用意し、それらを返すスタブを作成
-      final dummyTasks = List.generate(
-        30,
-        (index) =>
-            Task(id: index + 1, title: 'タスク${index + 1}', isCompleted: false),
-      );
-      dummyTasks.sort((a, b) => b.id.compareTo(a.id));
-      final firstPageTasks = dummyTasks.where((task) => task.id > 20).toList();
-      final secondPageTasks = dummyTasks
-          .where((task) => task.id <= 20)
-          .toList();
-      when(
-        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
-      ).thenReturn((firstPageTasks, true));
-      when(
-        repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
-      ).thenReturn((secondPageTasks, false));
+        // idの降順のタスク30件を用意し、それらを返すスタブを作成
+        final dummyTasks = List.generate(
+          30,
+          (index) =>
+              Task(id: index + 1, title: 'タスク${index + 1}', isCompleted: false),
+        );
+        dummyTasks.sort((a, b) => b.id.compareTo(a.id));
+        final firstPageTasks = dummyTasks
+            .where((task) => task.id > 20)
+            .toList();
+        final secondPageTasks = dummyTasks
+            .where((task) => task.id <= 20)
+            .toList();
+        when(
+          repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+        ).thenReturn((firstPageTasks, true));
+        when(
+          repository.fetchTasks(page: 2, sortOption: TaskSortOption.latest),
+        ).thenReturn((secondPageTasks, false));
 
-      await tester.pumpWidget(buildApp(repository));
-      await tester.pump();
+        await tester.pumpWidget(buildApp(repository));
+        await tester.pump();
 
-      // スクロールの関係でちょうど20件目まで表示されることの確認が難しいため、1件目が表示されることのみ確認
-      final firstWidgetKey = const ValueKey('task-list-30');
-      expect(find.byKey(firstWidgetKey), findsOneWidget);
+        // スクロールの関係でちょうど20件目まで表示されることの確認が難しいため、1件目が表示されることのみ確認
+        final firstWidgetKey = const ValueKey('task-list-30');
+        expect(find.byKey(firstWidgetKey), findsOneWidget);
 
-      final list = find.byKey(
-        PageStorageKey('task-list-${TaskFilterOption.all}'),
-      );
-      final scrollable = find.byWidgetPredicate((w) => w is Scrollable);
-      final scrollableOfList = find.descendant(of: list, matching: scrollable);
-      final lastWidgetKey = const ValueKey('task-list-1');
+        final list = find.byKey(
+          PageStorageKey('task-list-${TaskFilterOption.all}'),
+        );
+        final scrollable = find.byWidgetPredicate((w) => w is Scrollable);
+        final scrollableOfList = find.descendant(
+          of: list,
+          matching: scrollable,
+        );
+        final lastWidgetKey = const ValueKey('task-list-1');
 
-      // 30件目までスクロール
-      await tester.scrollUntilVisible(
-        find.byKey(lastWidgetKey),
-        500,
-        scrollable: scrollableOfList,
-      );
+        // 30件目までスクロール
+        await tester.scrollUntilVisible(
+          find.byKey(lastWidgetKey),
+          500,
+          scrollable: scrollableOfList,
+        );
 
-      expect(find.byKey(lastWidgetKey), findsOneWidget);
+        expect(find.byKey(lastWidgetKey), findsOneWidget);
+      });
+    });
+
+    group('タスクの完了・未完了の切り替え', () {
+      testWidgets('タスクが未完了状態の時、チェックボックスをタップすると、タスクが完了状態になる', (
+        WidgetTester tester,
+      ) async {
+        final repository = MockITaskRepository();
+        final task = const Task(id: 1, title: 'タスク1', isCompleted: false);
+        when(
+          repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+        ).thenReturn(([task], false));
+        when(
+          repository.completeTask(1),
+        ).thenReturn(task.copyWith(isCompleted: true));
+
+        await tester.pumpWidget(buildApp(repository));
+
+        final targetListItem = find.byKey(const ValueKey('task-list-1'));
+        final checkboxFinder = find.descendant(
+          of: targetListItem,
+          matching: find.byType(Checkbox),
+        );
+        final checkbox = tester.widget<Checkbox>(checkboxFinder);
+        expect(checkbox.value, false);
+
+        await tester.tap(checkboxFinder);
+        await tester.pump();
+
+        final updatedCheckbox = tester.widget<Checkbox>(checkboxFinder);
+        verify(repository.completeTask(1)).called(1);
+        expect(updatedCheckbox.value, true);
+      });
+
+      testWidgets('タスクが完了状態の時、チェックボックスをタップすると、タスクが未完了状態になる', (
+        WidgetTester tester,
+      ) async {
+        final repository = MockITaskRepository();
+        final task = const Task(id: 1, title: 'タスク1', isCompleted: true);
+        when(
+          repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
+        ).thenReturn(([task], false));
+        when(
+          repository.uncompleteTask(1),
+        ).thenReturn(task.copyWith(isCompleted: false));
+
+        await tester.pumpWidget(buildApp(repository));
+
+        final targetListItem = find.byKey(const ValueKey('task-list-1'));
+        final checkboxFinder = find.descendant(
+          of: targetListItem,
+          matching: find.byType(Checkbox),
+        );
+        final checkbox = tester.widget<Checkbox>(checkboxFinder);
+        expect(checkbox.value, true);
+
+        await tester.tap(checkboxFinder);
+        await tester.pump();
+
+        final updatedCheckbox = tester.widget<Checkbox>(checkboxFinder);
+        verify(repository.uncompleteTask(1)).called(1);
+        expect(updatedCheckbox.value, false);
+      });
     });
   });
 
-  group('タスクの完了・未完了の切り替え', () {
-    testWidgets('タスクが未完了状態の時、チェックボックスをタップすると、タスクが完了状態になる', (
+  group('タスクのステータスによる絞り込み', () {
+    testWidgets('それぞれのフィルタ切り替えボタンをタップした際、対象のステータスのタスクが表示される', (
       WidgetTester tester,
     ) async {
       final repository = MockITaskRepository();
-      final task = const Task(id: 1, title: 'タスク1', isCompleted: false);
       when(
         repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
-      ).thenReturn(([task], false));
-      when(
-        repository.completeTask(1),
-      ).thenReturn(task.copyWith(isCompleted: true));
-
+      ).thenReturn((
+        [
+          const Task(id: 1, title: '未完了タスク', isCompleted: false),
+          const Task(id: 2, title: '完了済みタスク', isCompleted: true),
+        ],
+        false,
+      ));
       await tester.pumpWidget(buildApp(repository));
 
-      final checkbox1 = tester.widget<Checkbox>(find.byType(Checkbox));
-      expect(checkbox1.value, false);
+      final uncompletedTaskFinder = find.text('未完了タスク');
+      final completedTaskFinder = find.text('完了済みタスク');
 
-      await tester.tap(find.byType(Checkbox));
+      expect(uncompletedTaskFinder, findsOneWidget);
+      expect(completedTaskFinder, findsOneWidget);
+
+      await tester.tap(find.text('完了'));
       await tester.pump();
 
-      final checkbox2 = tester.widget<Checkbox>(find.byType(Checkbox));
-      verify(repository.completeTask(1)).called(1);
-      expect(checkbox2.value, true);
-    });
+      expect(uncompletedTaskFinder, findsNothing);
+      expect(completedTaskFinder, findsOneWidget);
 
-    testWidgets('タスクが完了状態の時、チェックボックスをタップすると、タスクが未完了状態になる', (
-      WidgetTester tester,
-    ) async {
-      final repository = MockITaskRepository();
-      final task = const Task(id: 1, title: 'タスク1', isCompleted: true);
-      when(
-        repository.fetchTasks(page: 1, sortOption: TaskSortOption.latest),
-      ).thenReturn(([task], false));
-      when(
-        repository.uncompleteTask(1),
-      ).thenReturn(task.copyWith(isCompleted: false));
-
-      await tester.pumpWidget(buildApp(repository));
-
-      final checkbox1 = tester.widget<Checkbox>(find.byType(Checkbox));
-      expect(checkbox1.value, true);
-
-      await tester.tap(find.byType(Checkbox));
+      await tester.tap(find.text('未完了'));
       await tester.pump();
 
-      final checkbox2 = tester.widget<Checkbox>(find.byType(Checkbox));
-      verify(repository.uncompleteTask(1)).called(1);
-      expect(checkbox2.value, false);
+      expect(uncompletedTaskFinder, findsOneWidget);
+      expect(completedTaskFinder, findsNothing);
+
+      await tester.tap(find.text('全て'));
+      await tester.pump();
+
+      expect(uncompletedTaskFinder, findsOneWidget);
+      expect(completedTaskFinder, findsOneWidget);
     });
   });
 }
