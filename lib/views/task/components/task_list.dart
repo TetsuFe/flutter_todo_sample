@@ -13,6 +13,7 @@ class TaskList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
     final selectedTabIndex = useState(0);
+
     return Column(
       children: [
         Padding(
@@ -119,32 +120,26 @@ class TaskListBody extends ConsumerWidget {
     final hasNextPage = taskProvider.hasNextPage;
     final notifier = ref.watch(taskListProvider.notifier);
 
-    return CustomScrollView(
-      key: ValueKey('task-list-$filterOption'),
-      slivers: [
-        SliverList.builder(
-          itemBuilder: (context, index) {
-            if (index > filteredTask.length - 1 && hasNextPage) {
-              Future.microtask(() => notifier.loadNextPage());
-            }
-            if (index > filteredTask.length - 1) {
-              return null;
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TaskListItem(
-                task: filteredTask[index],
-                key: ValueKey(
-                  'task-list-$filterOption-${filteredTask[index].id}',
-                ),
-                onTaskStatusChanged: () {
-                  notifier.toggleTaskStatus(filteredTask[index]);
-                },
-              ),
-            );
-          },
-        ),
-      ],
+    return ListView.builder(
+      key: PageStorageKey('task-list-$filterOption'),
+      itemBuilder: (context, index) {
+        if (index > filteredTask.length - 1 && hasNextPage) {
+          Future.microtask(() => notifier.loadNextPage());
+        }
+        if (index > filteredTask.length - 1) {
+          return null;
+        }
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: TaskListItem(
+            task: filteredTask[index],
+            key: ValueKey('task-list-$filterOption-${filteredTask[index].id}'),
+            onTaskStatusChanged: () {
+              notifier.toggleTaskStatus(filteredTask[index]);
+            },
+          ),
+        );
+      },
     );
   }
 }
