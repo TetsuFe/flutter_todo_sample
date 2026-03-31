@@ -49,7 +49,9 @@ void main() {
       final firstWidgetKey = ValueKey('task-list-${TaskFilterOption.all}-30');
       expect(find.byKey(firstWidgetKey), findsOneWidget);
 
-      final list = find.byKey(ValueKey('task-list-${TaskFilterOption.all}'));
+      final list = find.byKey(
+        PageStorageKey('task-list-${TaskFilterOption.all}'),
+      );
       final scrollable = find.byWidgetPredicate((w) => w is Scrollable);
       final scrollableOfList = find.descendant(of: list, matching: scrollable);
       final lastWidgetKey = ValueKey('task-list-${TaskFilterOption.all}-1');
