@@ -46,7 +46,7 @@ void main() {
       await tester.pump();
 
       // スクロールの関係でちょうど20件目まで表示されることの確認が難しいため、1件目が表示されることのみ確認
-      final firstWidgetKey = ValueKey('task-list-${TaskFilterOption.all}-30');
+      final firstWidgetKey = const ValueKey('task-list-30');
       expect(find.byKey(firstWidgetKey), findsOneWidget);
 
       final list = find.byKey(
@@ -54,7 +54,7 @@ void main() {
       );
       final scrollable = find.byWidgetPredicate((w) => w is Scrollable);
       final scrollableOfList = find.descendant(of: list, matching: scrollable);
-      final lastWidgetKey = ValueKey('task-list-${TaskFilterOption.all}-1');
+      final lastWidgetKey = const ValueKey('task-list-1');
 
       // 30件目までスクロール
       await tester.scrollUntilVisible(

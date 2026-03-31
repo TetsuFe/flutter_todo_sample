@@ -147,7 +147,7 @@ class _TaskListTabPage extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: TaskListItem(
             task: filteredTask[index],
-            key: ValueKey('task-list-$filterOption-${filteredTask[index].id}'),
+            key: ValueKey('task-list-${filteredTask[index].id}'),
             onTaskStatusChanged: () {
               notifier.toggleTaskStatus(filteredTask[index]);
             },
