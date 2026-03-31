@@ -93,7 +93,7 @@ class _TabItem extends ConsumerWidget {
               style: TextStyle(
                 color: isSelected
                     ? Theme.of(context).colorScheme.primary
-                    : null,
+                    : Theme.of(context).disabledColor,
               ),
             ),
             Padding(
@@ -101,7 +101,7 @@ class _TabItem extends ConsumerWidget {
               child: Divider(
                 color: isSelected
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).dividerColor,
+                    : Theme.of(context).disabledColor,
               ),
             ),
           ],
