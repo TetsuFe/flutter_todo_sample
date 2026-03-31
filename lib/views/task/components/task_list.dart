@@ -20,7 +20,7 @@ class TaskList extends HookConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              TabItem(
+              _TabItem(
                 title: '全て',
                 isSelected: selectedTabIndex.value == 0,
                 onTabSelected: () {
@@ -28,7 +28,7 @@ class TaskList extends HookConsumerWidget {
                   pageController.jumpToPage(0);
                 },
               ),
-              TabItem(
+              _TabItem(
                 title: '完了',
                 isSelected: selectedTabIndex.value == 1,
                 onTabSelected: () {
@@ -36,7 +36,7 @@ class TaskList extends HookConsumerWidget {
                   pageController.jumpToPage(1);
                 },
               ),
-              TabItem(
+              _TabItem(
                 title: '未完了',
                 isSelected: selectedTabIndex.value == 2,
                 onTabSelected: () {
@@ -54,9 +54,11 @@ class TaskList extends HookConsumerWidget {
             controller: pageController,
             onPageChanged: (value) => selectedTabIndex.value = value,
             children: const [
-              TaskListBody(filterOption: model.TaskFilterOption.all),
-              TaskListBody(filterOption: model.TaskFilterOption.completed),
-              TaskListBody(filterOption: model.TaskFilterOption.uncompleted),
+              _TaskListTabPage(filterOption: model.TaskFilterOption.all),
+              _TaskListTabPage(filterOption: model.TaskFilterOption.completed),
+              _TaskListTabPage(
+                filterOption: model.TaskFilterOption.uncompleted,
+              ),
             ],
           ),
         ),
@@ -65,9 +67,8 @@ class TaskList extends HookConsumerWidget {
   }
 }
 
-class TabItem extends ConsumerWidget {
-  const TabItem({
-    super.key,
+class _TabItem extends ConsumerWidget {
+  const _TabItem({
     required this.title,
     required this.onTabSelected,
     required this.isSelected,
@@ -110,8 +111,8 @@ class TabItem extends ConsumerWidget {
   }
 }
 
-class TaskListBody extends ConsumerWidget {
-  const TaskListBody({super.key, required this.filterOption});
+class _TaskListTabPage extends ConsumerWidget {
+  const _TaskListTabPage({required this.filterOption});
   final model.TaskFilterOption filterOption;
 
   @override
