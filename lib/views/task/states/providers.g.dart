@@ -41,7 +41,7 @@ final class TaskListProvider
   }
 }
 
-String _$taskListHash() => r'593c1f0bedd2ab5e8d8f64e035b5206a05d36063';
+String _$taskListHash() => r'7f5c3cfe709d281acd670037c120599b6ff230fe';
 
 abstract class _$TaskList extends $Notifier<model.PagenatedTaskListState> {
   model.PagenatedTaskListState build();
@@ -116,4 +116,81 @@ abstract class _$TaskSortOption extends $Notifier<model.TaskSortOption> {
             >;
     element.handleCreate(ref, build);
   }
+}
+
+@ProviderFor(filteredTaskList)
+final filteredTaskListProvider = FilteredTaskListFamily._();
+
+final class FilteredTaskListProvider
+    extends $FunctionalProvider<List<Task>, List<Task>, List<Task>>
+    with $Provider<List<Task>> {
+  FilteredTaskListProvider._({
+    required FilteredTaskListFamily super.from,
+    required model.TaskFilterOption super.argument,
+  }) : super(
+         retry: null,
+         name: r'filteredTaskListProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$filteredTaskListHash();
+
+  @override
+  String toString() {
+    return r'filteredTaskListProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<List<Task>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<Task> create(Ref ref) {
+    final argument = this.argument as model.TaskFilterOption;
+    return filteredTaskList(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Task> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Task>>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FilteredTaskListProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$filteredTaskListHash() => r'3bcf2fbf34da32c02a86e528480f21724f06761a';
+
+final class FilteredTaskListFamily extends $Family
+    with $FunctionalFamilyOverride<List<Task>, model.TaskFilterOption> {
+  FilteredTaskListFamily._()
+    : super(
+        retry: null,
+        name: r'filteredTaskListProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  FilteredTaskListProvider call(model.TaskFilterOption filterOption) =>
+      FilteredTaskListProvider._(argument: filterOption, from: this);
+
+  @override
+  String toString() => r'filteredTaskListProvider';
 }

@@ -1,45 +1,163 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_todo_sample/views/task/states/pagenated_task_list_state.dart'
     as model;
 import 'package:flutter_todo_sample/views/task/components/task_list_item.dart';
 import 'package:flutter_todo_sample/views/task/states/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TaskList extends ConsumerWidget {
+class TaskList extends HookConsumerWidget {
   const TaskList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tasks = ref.watch(taskListProvider).tasks;
-    final hasNextPage = ref.watch(taskListProvider).hasNextPage;
-    final notifier = ref.watch(taskListProvider.notifier);
+    final pageController = usePageController();
+    final selectedTabIndex = useState(0);
 
-    return CustomScrollView(
-      slivers: [
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Row(children: [Spacer(), TaskListSortFilterButton()]),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              _TabItem(
+                title: '全て',
+                isSelected: selectedTabIndex.value == 0,
+                onTabSelected: () {
+                  selectedTabIndex.value = 0;
+                  pageController.jumpToPage(0);
+                },
+              ),
+              _TabItem(
+                title: '完了',
+                isSelected: selectedTabIndex.value == 1,
+                onTabSelected: () {
+                  selectedTabIndex.value = 1;
+                  pageController.jumpToPage(1);
+                },
+              ),
+              _TabItem(
+                title: '未完了',
+                isSelected: selectedTabIndex.value == 2,
+                onTabSelected: () {
+                  selectedTabIndex.value = 2;
+                  pageController.jumpToPage(2);
+                },
+              ),
+              const Spacer(),
+              const TaskListSortFilterButton(),
+            ],
           ),
         ),
-        SliverList.builder(
-          itemBuilder: (context, index) {
-            if (index > tasks.length - 1 && hasNextPage) {
-              Future.microtask(() => notifier.loadNextPage());
-            }
-            if (index > tasks.length - 1) {
-              return null;
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TaskListItem(
-                task: tasks[index],
-                key: ValueKey(tasks[index].id),
+        Expanded(
+          child: PageView(
+            controller: pageController,
+            onPageChanged: (value) => selectedTabIndex.value = value,
+            children: const [
+              _TaskListTabPage(filterOption: model.TaskFilterOption.all),
+              _TaskListTabPage(filterOption: model.TaskFilterOption.completed),
+              _TaskListTabPage(
+                filterOption: model.TaskFilterOption.uncompleted,
               ),
-            );
-          },
+            ],
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _TabItem extends ConsumerWidget {
+  const _TabItem({
+    required this.title,
+    required this.onTabSelected,
+    required this.isSelected,
+  });
+
+  final String title;
+  final VoidCallback onTabSelected;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        onTabSelected();
+      },
+      child: SizedBox(
+        width: 60,
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).disabledColor,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Divider(
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).disabledColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TaskListTabPage extends ConsumerWidget {
+  const _TaskListTabPage({required this.filterOption});
+  final model.TaskFilterOption filterOption;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final taskProvider = ref.watch(taskListProvider);
+    final filteredTask = ref.watch(filteredTaskListProvider(filterOption));
+    final hasNextPage = taskProvider.hasNextPage;
+    final notifier = ref.watch(taskListProvider.notifier);
+
+    if (hasNextPage && filteredTask.isEmpty) {
+      Future.microtask(() => notifier.loadNextPage());
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (filteredTask.isEmpty) {
+      switch (filterOption) {
+        case model.TaskFilterOption.all:
+          return const Center(
+            child: Text('タスクが一つも作成されていません…\n＋ボタンからタスクを作成してみましょう！'),
+          );
+        case model.TaskFilterOption.completed:
+          return const Center(child: Text('完了したタスクはありません'));
+        case model.TaskFilterOption.uncompleted:
+          return const Center(child: Text('未完了のタスクはありません'));
+      }
+    }
+    return ListView.builder(
+      key: PageStorageKey('task-list-$filterOption'),
+      itemBuilder: (context, index) {
+        if (index > filteredTask.length - 1 && hasNextPage) {
+          Future.microtask(() => notifier.loadNextPage());
+        }
+        if (index > filteredTask.length - 1) {
+          return null;
+        }
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: TaskListItem(
+            task: filteredTask[index],
+            key: ValueKey('task-list-${filteredTask[index].id}'),
+            onTaskStatusChanged: () {
+              notifier.toggleTaskStatus(filteredTask[index]);
+            },
+          ),
+        );
+      },
     );
   }
 }

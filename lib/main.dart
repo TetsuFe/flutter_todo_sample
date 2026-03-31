@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Todo',
+      title: 'Flutter Todo Sample',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
-      home: const HomeScreen(title: 'ホーム'),
+      home: const HomeScreen(title: 'TODOリスト'),
     );
   }
 }

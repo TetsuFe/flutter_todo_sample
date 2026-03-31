@@ -65,6 +65,25 @@ class TaskList extends _$TaskList {
       }).toList(),
     );
   }
+
+  void toggleTaskStatus(Task task) {
+    final repository = ref.watch(taskRepositoryProvider);
+    if (task.isCompleted) {
+      try {
+        final updatedTask = repository.uncompleteTask(task.id);
+        refreshTask(updatedTask);
+      } catch (e) {
+        // 何もしない
+      }
+    } else {
+      try {
+        final updatedTask = repository.completeTask(task.id);
+        refreshTask(updatedTask);
+      } catch (e) {
+        // 何もしない
+      }
+    }
+  }
 }
 
 @riverpod
@@ -79,4 +98,16 @@ class TaskSortOption extends _$TaskSortOption {
         ? model.TaskSortOption.oldest
         : model.TaskSortOption.latest;
   }
+}
+
+@riverpod
+List<Task> filteredTaskList(Ref ref, model.TaskFilterOption filterOption) {
+  final taskList = ref.watch(taskListProvider);
+  return switch (filterOption) {
+    model.TaskFilterOption.all => taskList.tasks,
+    model.TaskFilterOption.completed =>
+      taskList.tasks.where((task) => task.isCompleted).toList(),
+    model.TaskFilterOption.uncompleted =>
+      taskList.tasks.where((task) => !task.isCompleted).toList(),
+  };
 }
