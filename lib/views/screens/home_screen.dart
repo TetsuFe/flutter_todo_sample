@@ -1,18 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_sample/views/task/components/create_task_modal.dart';
 import 'package:flutter_todo_sample/views/task/components/task_list.dart';
 
+@RoutePage()
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.title});
-
-  final String title;
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: const Text('Flutter TODO Sample'),
       ),
       body: const TaskList(),
       floatingActionButton: FloatingActionButton(
